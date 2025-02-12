@@ -1,8 +1,8 @@
-import SearchBar from "./Searchbar";
-import FeatureTile from "./FeatureTile";
+import SearchBar from "./components/searchBar";
+import FeatureTile from "./components/featureTile";
 import { useContext, useEffect, useState } from "react";
-import UserContext from "../context/UserContext";
-import FeatureContext from "../context/FeatureContext";
+import UserContext from "../../../store/userContext";
+import FeatureContext from "./store/featureContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom"; 
 

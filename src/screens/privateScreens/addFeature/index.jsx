@@ -1,8 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import UserContext from "../context/UserContext";
 import axios from "axios";
-import Feature from "./Feature";
+import UserContext from "../../../store/userContext";
 
 const USER_API_URL = "http://localhost:8080/api/public/users";
 const FEATURE_API_URL = "http://localhost:8080/api/public/feature/add";
@@ -12,8 +11,6 @@ const AddFeature = () => {
   const { user } = useContext(UserContext);
   const [users, setUsers] = useState([]);
 
-//   console.log("printing user id on add featue page " , user.userId );
-//   console.log("printing user role on add featue page " , user.role );
 
   const [formData, setFormData] = useState({
     title : "",

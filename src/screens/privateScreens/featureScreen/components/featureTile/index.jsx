@@ -27,11 +27,10 @@ const FeatureTile = ({ feature }) => {
         <div className="mt-2 text-gray-900 font-semibold">
           {feature?.assignedTo.username || "No Developer Assigned"}
         </div>
-
-         {/* Button to navigate to Feature Status Page */}
+        
         <button 
             className="mt-2 bg-blue-500 text-white px-3 py-1 rounded"
-            onClick={() => navigate(`/FeatureStatus/${feature.id}`, { state: { feature } })}
+            onClick={() => navigate(`/FeatureStatus`)}
         >
             View Details
         </button>

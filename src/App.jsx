@@ -1,11 +1,11 @@
 import './App.css'
 import {BrowserRouter,Route,Routes} from 'react-router-dom';
-import Login from './components/Login';
-import Register from './components/Register';
-import Welcome from './components/welcome';
-import Feature from './components/Feature';
-import AddFeature from './components/AddFeature';
-import FeatureStatus from './components/FeatureStatus';
+import Login from './screens/publicScreens/login';
+import Register from './screens/publicScreens/register';
+import Welcome from './screens/publicScreens/welcomeScreen';
+import Feature from './screens/privateScreens/featureScreen';
+import AddFeature from './screens/privateScreens/addFeature';
+import FeatureStatus from './screens/privateScreens/FeatureStatus';
 
 
 function App() {
