@@ -1,5 +1,4 @@
 import React from 'react';
-import { exec } from 'child_process';
 
 const AboutUs = () => {
     return (
@@ -12,16 +11,3 @@ const AboutUs = () => {
 
 export default AboutUs;
 
-
-
-// Add the following code to commit and push the changes to GitHub
-
-
-exec('git add . && git commit -m "Updated AboutUs component" && git push', (error, stdout, stderr) => {
-    if (error) {
-        console.error(`exec error: ${error}`);
-        return;
-    }
-    console.log(`stdout: ${stdout}`);
-    console.error(`stderr: ${stderr}`);
-});

@@ -1,8 +1,15 @@
 import { useNavigate } from "react-router-dom";
 
+
 const FeatureTile = ({ feature }) => {
     if (!feature) return null; 
     const navigate = useNavigate();
+
+    const handleViewDetails = () => {
+      sessionStorage.setItem("FeatureId", feature.featureId); // Storing featureId in sessionStorage. 
+      console.log("FeatureId and titile of current clicked feature ", feature.featureId, feature.title);
+      navigate("/FeatureStatus"); // move to feature stauts page
+    };
   
     return (
       <div className="bg-gray-200 rounded-lg p-4 shadow-md w-full md:w-3/4 mb-4 mx-auto">
@@ -30,7 +37,7 @@ const FeatureTile = ({ feature }) => {
         
         <button 
             className="mt-2 bg-blue-500 text-white px-3 py-1 rounded"
-            onClick={() => navigate(`/FeatureStatus`)}
+            onClick={handleViewDetails}
         >
             View Details
         </button>

@@ -96,7 +96,7 @@ const AddFeature = () => {
       });
   
       alert("Feature added successfully!");
-      navigate("/Features");
+      navigate("/Feature");
     } catch (error) {
       console.error("Error adding feature:", error);
       alert("Failed to add feature. Please try again.");

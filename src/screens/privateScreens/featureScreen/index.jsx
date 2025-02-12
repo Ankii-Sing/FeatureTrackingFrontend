@@ -5,6 +5,7 @@ import UserContext from "../../../store/userContext";
 import FeatureContext from "./store/featureContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom"; 
+import { isAuthenticated } from "../../../utils/auth";
 
 const Feature = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -18,6 +19,8 @@ const Feature = () => {
   console.log("User details from the context provider:", user);
 
   useEffect(() => {
+    isAuthenticated() ; // Check if the user is authenticated
+
     const fetchFeatures = async () => {
       try {
         const response = await axios.get("http://localhost:8080/api/public/feature/");
@@ -84,7 +87,7 @@ const Feature = () => {
       {isAdminOrManager && (
         <button
           className="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition"
-          onClick={(isAdminOrManager) => navigate("/AddFeature")}
+          onClick={() => navigate("/AddFeature")}
         >
           + Add Feature
         </button>
