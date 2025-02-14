@@ -7,6 +7,7 @@ import Feature from './screens/privateScreens/featureScreen';
 import AddFeature from './screens/privateScreens/addFeature';
 import FeatureStatus from './screens/privateScreens/FeatureStatus';
 import PrivateRoute from './screens/privateScreens/PrivateRoutes';
+import UpdateFeatureScreen from './screens/privateScreens/updateFeatureScreen';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/feature" element={<Feature />} />
           <Route path="/addFeature" element={<AddFeature />} />
           <Route path="/featureStatus" element={<FeatureStatus />} />
+          <Route path="/UpdateFeatureScreen" element={<UpdateFeatureScreen />} />
         </Route>
       </Routes>
     </BrowserRouter>

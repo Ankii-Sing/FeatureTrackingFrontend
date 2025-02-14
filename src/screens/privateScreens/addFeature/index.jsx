@@ -26,9 +26,7 @@ const AddFeature = () => {
   useEffect(() => {
     if (user && user.userId) {
       setFormData((prevFormData) => ({
-        ...prevFormData,
-        created_by:String( user.userId),
-      }));
+        ...prevFormData,created_by:String( user.userId),}));
     }
   }, [user]);
 
@@ -210,7 +208,7 @@ const AddFeature = () => {
         >
           Submit Feature
         </button>
-      </form>
+      </form>   
     </div>
   );
 };
