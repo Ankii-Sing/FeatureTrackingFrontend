@@ -1,17 +1,24 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const StageLinkUploader = ({ stage, featureId, userId 
-    // ,links
-}) => {
+const StageLinkUploader = ({ stage, featureId, userId, userRole, links = [] }) => {
   const [showModal, setShowModal] = useState(false);
   const [documentLink, setDocumentLink] = useState("");
+  const [isExpanded, setIsExpanded] = useState(false); // Accordion state
 
-  const openModal = () => setShowModal(true);
+  const openModal = () => {
+    if (!roleCheck()) {
+      alert("You are not authorized to add a document at this stage.");
+      return;
+    }
+    setShowModal(true);
+  };
+
   const closeModal = () => setShowModal(false);
-//   console.log("links",links);
+  const toggleAccordion = () => setIsExpanded(!isExpanded); // Toggle function
 
-  // Map stage names to DocumentType enum values
+  console.log("Links received:", links);
+
   const getDocumentType = (stage) => {
     const stageMapping = {
       "Technical Design Document": "TECHNICAL_DOC",
@@ -20,87 +27,124 @@ const StageLinkUploader = ({ stage, featureId, userId
       "Pre- and Post-Deployment Documents": "PRE_POST_DOC",
       "Sanity Testing/Staging Results": "STAGING_DOC",
     };
-    return stageMapping[stage] || "UNKNOWN_DOC"; // Default fallback
+    return stageMapping[stage] || "UNKNOWN_DOC";
+  };
+
+  const roleCheck = () => {
+    const allowedRoles = {
+      "Technical Design Document": ["ADMIN", "DEVELOPER", "EPIC_OWNER"],
+      "Dev-Testing Document": ["ADMIN", "DEVELOPER", "EPIC_OWNER"],
+      "QA Testing Document": ["ADMIN", "QA_ENGINEER", "EPIC_OWNER"],
+      "Pre- and Post-Deployment Documents": ["ADMIN", "DEVELOPER", "PRODUCT_MANAGER"],
+      "Sanity Testing/Staging Results": ["ADMIN", "QAE", "EPIC_OWNER", "PRODUCT_MANAGER"],
+    };
+
+    return allowedRoles[stage]?.includes(userRole);
   };
 
   const handleSave = () => {
-
-
     if (!documentLink.trim()) {
-        alert("Document link cannot be empty!"); // Show an alert or use better UI feedback
-        return;
+      alert("Document link cannot be empty!");
+      return;
     }
 
-
     const token = sessionStorage.getItem("token");
-    const documentType = getDocumentType(stage); // Get correct type
+    const documentType = getDocumentType(stage);
 
     const payload = {
       featureId,
-      userId, // Fix: Correct structure as expected by DTO
+      userId,
       documentType,
       documentLink,
     };
 
     console.log("Adding document:", payload);
 
-    axios.post("http://localhost:8080/api/public/doc", payload, {
-      headers: { Authorization: `${token}` },
-    })
-    .then(() => {
-      alert("Document added successfully!");
-      setShowModal(false);
-      setDocumentLink("");
-    })
-    .catch((error) => console.error("Error adding document:", error));
+    axios
+      .post("http://localhost:8080/api/public/doc", payload, {
+        headers: { Authorization: `${token}` },
+      })
+      .then(() => {
+        alert("Document added successfully!");
+        setShowModal(false);
+        setDocumentLink("");
+      })
+      .catch((error) => console.error("Error adding document:", error));
   };
 
-    // const showlinks = () => {
-    //     return links.map((link) => (
-    //         <a href={link.documentLink} target="_blank" rel="noreferrer" className="text-blue-600 underline" key={link.documentId}>
-    //             {link.documentLink}
-    //         </a>
-    //     ));
-    // };
-
   return (
-    <div className="flex justify-between items-center border-b py-2">
-      <span>{stage}</span> 
-      {/* <span> {showlinks}</span> */}
+    <div className="border-b border-sky-200 py-4">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <span className="font-semibold text-slate-700">{stage}</span>
+        <button
+          className="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition-colors"
+          onClick={openModal}
+        >
+          Add Link
+        </button>
+      </div>
 
-      {/* {links.length > 0 ? (
-        <ul className="mt-2 space-y-2">
-          {links.map((link, index) => (
-            <li key={index} className="text-blue-600 underline">
-              <a href={link} target="_blank" rel="noopener noreferrer">
-                {link}
-              </a>
-            </li>
-          ))}
-        </ul>
+      {/* Accordion (Only if links exist) */}
+      {links.length > 0 ? (
+        <div>
+          <div
+            className="flex justify-between items-center cursor-pointer mt-3"
+            onClick={toggleAccordion}
+          >
+            <span className="text-slate-600">View Documents</span>
+            <span className="text-slate-600 transform transition-transform duration-200">
+              {isExpanded ? "▲" : "▼"} {/* Simple arrow icon */}
+            </span>
+          </div>
+          {isExpanded && (
+            <div className="mt-3 p-4 border border-sky-200 rounded-lg bg-sky-50">
+              <ul className="space-y-2">
+                {links.map((link, index) => (
+                  <li key={index} className="text-blue-600 hover:text-blue-800">
+                    <a
+                      href={link.documentLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline"
+                    >
+                      {link.documentLink}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
       ) : (
-        <p className="text-gray-500 mt-2">No documents available</p>
-      )} */}
-
-      <button className="bg-purple-600 text-white px-3 py-1 rounded-md" onClick={openModal}>
-        Add Link
-      </button>
+        <p className="text-slate-500 mt-3">No documents available</p>
+      )}
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-blue-200 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg">
-            <h2 className="text-lg font-bold mb-2">Paste Link for {stage}</h2>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h2 className="text-lg font-bold text-slate-700 mb-4">Paste Link for {stage}</h2>
             <input
               type="text"
-              className="border p-2 w-full mb-4"
+              className="w-full p-3 border-2 border-sky-200 rounded-lg focus:outline-none focus:border-teal-400 placeholder-slate-400"
               placeholder="Enter link here..."
               value={documentLink}
               onChange={(e) => setDocumentLink(e.target.value)}
             />
-            <div className="flex justify-end">
-              <button className="bg-gray-400 px-4 py-2 mr-2 rounded" onClick={closeModal}>Cancel</button>
-              <button className="bg-blue-600 text-white px-4 py-2 rounded" onClick={handleSave}>Save</button>
+            <div className="flex justify-end mt-4 space-x-3">
+              <button
+                className="bg-slate-400 px-4 py-2 rounded-lg hover:bg-slate-500 transition-colors"
+                onClick={closeModal}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition-colors"
+                onClick={handleSave}
+              >
+                Save
+              </button>
             </div>
           </div>
         </div>
@@ -110,3 +154,145 @@ const StageLinkUploader = ({ stage, featureId, userId
 };
 
 export default StageLinkUploader;
+
+
+
+
+// import React, { useState } from "react";
+// import axios from "axios";
+
+// const StageLinkUploader = ({ stage, featureId, userId, userRole, links = [] }) => {
+//   const [showModal, setShowModal] = useState(false);
+//   const [documentLink, setDocumentLink] = useState("");
+//   const [isExpanded, setIsExpanded] = useState(false); // Accordion state
+
+//   const openModal = () => {
+//     if (!roleCheck()) {
+//       alert("You are not authorized to add a document at this stage.");
+//       return;
+//     }
+//     setShowModal(true);
+//   };
+
+//   const closeModal = () => setShowModal(false);
+//   const toggleAccordion = () => setIsExpanded(!isExpanded); // Toggle function
+
+//   console.log("Links received:", links);
+
+//   const getDocumentType = (stage) => {
+//     const stageMapping = {
+//       "Technical Design Document": "TECHNICAL_DOC",
+//       "Dev-Testing Document": "DEV_TESTING_DOC",
+//       "QA Testing Document": "QA_DOC",
+//       "Pre- and Post-Deployment Documents": "PRE_POST_DOC",
+//       "Sanity Testing/Staging Results": "STAGING_DOC",
+//     };
+//     return stageMapping[stage] || "UNKNOWN_DOC";
+//   };
+
+
+//   const roleCheck = () => {
+//     const allowedRoles = {
+//       "Technical Design Document": ["ADMIN", "DEVELOPER", "EPIC_OWNER"],
+//       "Dev-Testing Document": ["ADMIN", "DEVELOPER", "EPIC_OWNER"],
+//       "QA Testing Document": ["ADMIN", "QA_ENGINEER", "EPIC_OWNER"],
+//       "Pre- and Post-Deployment Documents": ["ADMIN","DEVELOPER", "PRODUCT_MANAGER"],
+//       "Sanity Testing/Staging Results": ["ADMIN", "QAE", "EPIC_OWNER", "PRODUCT_MANAGER"],
+//     };
+
+//     return allowedRoles[stage]?.includes(userRole);
+//   };
+
+//   const handleSave = () => {
+//     if (!documentLink.trim()) {
+//       alert("Document link cannot be empty!");
+//       return;
+//     }
+
+//     const token = sessionStorage.getItem("token");
+//     const documentType = getDocumentType(stage);
+
+//     const payload = {
+//       featureId,
+//       userId,
+//       documentType,
+//       documentLink,
+//     };
+
+//     console.log("Adding document:", payload);
+
+//     axios
+//       .post("http://localhost:8080/api/public/doc", payload, {
+//         headers: { Authorization: `${token}` },
+//       })
+//       .then(() => {
+//         alert("Document added successfully!");
+//         setShowModal(false);
+//         setDocumentLink("");
+//       })
+//       .catch((error) => console.error("Error adding document:", error));
+//   };
+
+//   return (
+//     <div className="border-b py-2">
+//       {/* Header */}
+//       <div className="flex justify-between items-center">
+//         <span className="font-semibold">{stage}</span>
+//         <button className="bg-purple-600 text-white px-3 py-1 rounded-md mt-2" onClick={openModal}>
+//           Add Link
+//         </button>
+//       </div>
+
+//       {/* Accordion (Only if links exist) */}
+//       {links.length > 0 ? (
+//         <div>
+//           <div className="flex justify-between items-center cursor-pointer mt-2" onClick={toggleAccordion}>
+//             <span className="text-gray-600">View Documents</span>
+//             <span className="text-xl">{isExpanded ? "⬆️" : "⬇️"}</span>
+//           </div>
+//           {isExpanded && (
+//             <div className="mt-2 p-2 border rounded-md bg-gray-100">
+//               <ul className="space-y-2">
+//                 {links.map((link, index) => (
+//                   <li key={index} className="text-blue-600 underline">
+//                     <a href={link.documentLink} target="_blank" rel="noopener noreferrer">
+//                       {link.documentLink}
+//                     </a>
+//                   </li>
+//                 ))}
+//               </ul>
+//             </div>
+//           )}
+//         </div>
+//       ) : (
+//         <p className="text-gray-500 mt-2">No documents available</p>
+//       )}
+
+//       {/* Modal */}
+//       {showModal && (
+//         <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+//           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+//             <h2 className="text-lg font-bold mb-2">Paste Link for {stage}</h2>
+//             <input
+//               type="text"
+//               className="border p-2 w-full mb-4"
+//               placeholder="Enter link here..."
+//               value={documentLink}
+//               onChange={(e) => setDocumentLink(e.target.value)}
+//             />
+//             <div className="flex justify-end">
+//               <button className="bg-gray-400 px-4 py-2 mr-2 rounded" onClick={closeModal}>
+//                 Cancel
+//               </button>
+//               <button className="bg-blue-600 text-white px-4 py-2 rounded" onClick={handleSave}>
+//                 Save
+//               </button>
+//             </div>
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default StageLinkUploader;

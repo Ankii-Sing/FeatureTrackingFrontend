@@ -11,8 +11,9 @@ import axios from "axios";
                 headers: { Authorization: `${token}` },
             });
             // setUsers(response.data);
-            return response.data;
             console.log("Fetched users:", response.data);
+            return response.data;
+            
         } catch (error) {
             console.error("Error fetching users:", error);
         }

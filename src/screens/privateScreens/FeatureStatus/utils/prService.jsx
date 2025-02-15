@@ -1,6 +1,12 @@
 import axios from "axios";
 
-export const updatePrStatus = (pullRequestId, status, fetchPullRequests) => {
+export const updatePrStatus = (pullRequestId, status, fetchPullRequests, role) => {
+
+    if(role  && role !== "ADMIN" && role !== "EPIC_OWNER" && role !== "DEVELOPER") {
+        alert("You are not authorized to update PR status.");
+        return;
+    }
+
     const token = sessionStorage.getItem("token"); // Get auth token
     const payload = {
         pullRequestId: pullRequestId,
