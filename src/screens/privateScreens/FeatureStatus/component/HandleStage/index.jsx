@@ -13,7 +13,7 @@ const StageLinkUploader = ({ stage, featureId, userId, userRole, feature ,links 
   const featureStageMapping = {
     "Technical Design Document": "TECHNICAL_DESIGN",
     "Dev-Testing Document": "DEV_TESTING",
-    "QA Testing Document": "QA_TESTING_",
+    "QA Testing Document": "QA_TESTING",
     "Pre- and Post-Deployment Documents": "PRE_POST_DEPLOYMENT",
     "Sanity Testing/Staging Results": "SANITY_TESTING_STAGING",
 

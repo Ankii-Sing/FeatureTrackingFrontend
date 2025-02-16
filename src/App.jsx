@@ -12,12 +12,12 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Public Routes */}
+    
         <Route path="/" element={<Welcome />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* Protected Routes */} // outlet is used for dynamically render child routes..
+        
         <Route element={<PrivateRoute />}>
           <Route path="/feature" element={<Feature />} />
           <Route path="/addFeature" element={<AddFeature />} />

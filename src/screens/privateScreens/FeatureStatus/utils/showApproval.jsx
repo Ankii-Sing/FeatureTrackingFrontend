@@ -1,6 +1,9 @@
+
+// This function is used to show the approval status of a feature based on the stage and feature object
+
 export const showApproval = (stage, feature) => {
-    console.log("showApproval: stage: ", stage);
-    console.log("showApproval: feature: ", feature);
+    // console.log("showApproval: stage: ", stage);
+    // console.log("showApproval: feature: ", feature);
 
     if (feature && stage == "Product Go-Ahead") {
         return feature.prodGoAheadStatus === true ? "Approved" : 

@@ -7,6 +7,8 @@ import { updatePrStatus } from "./utils/prService";
 import { showApproval } from "./utils/showApproval";
 import { fetchDocumentsByFeatureId } from "./utils/getAllDocList";
 import UpdateFeatureScreen from "../updateFeatureScreen";
+import updateFeatureApi from "../UpdateApi/updateapi";
+
 
 const FeatureStatus = () => {
   const [feature, setFeature] = useState(null);
@@ -115,6 +117,7 @@ const FeatureStatus = () => {
       alert(`You are not authorized to change ${stage} status.`);
       return;
     }
+    
 
     const token = sessionStorage.getItem("token");
     const isApproved = decision === "Approved";
@@ -123,6 +126,15 @@ const FeatureStatus = () => {
       "Epic Owner Go-Ahead": "EPIC_OWNER_GO_AHEAD",
       "Product Go-Ahead": "PRODUCT_GO_AHEAD",
     };
+
+    // callin updateFeatureApi after updating the feature.
+    feature.stage = stageMapping[stage];
+    console.log("Feature after updating stage:", feature);
+    console.log("User ID:", userId);
+    updateFeatureApi(feature, userId).then(() => {
+        setRefreshKey((prevKey) => prevKey + 1); // Refresh feature data after update
+      });
+    // setFeature(feature); // this is to update the feature object in the state.
 
     const payload = {
       featureId: featureId,

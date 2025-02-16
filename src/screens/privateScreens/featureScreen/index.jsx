@@ -112,8 +112,6 @@ const Feature = () => {
             </button>
           ))}
         </div>
-
-  //     Add Feature Button
         {isAdminOrManager && (
           <button
             className="fixed bottom-6 right-6 bg-teal-600 text-white p-4 rounded-full shadow-lg hover:bg-teal-700 transition-transform transform hover:scale-105"
