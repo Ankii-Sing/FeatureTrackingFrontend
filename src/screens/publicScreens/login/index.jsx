@@ -42,6 +42,7 @@ const Login = () => {
                        focus:outline-none focus:border-teal-400 focus:ring-1 
                        focus:ring-teal-400 placeholder-slate-400"
               value={email}
+              autoComplete="email"
               onChange={(e) => setEmail(e.target.value)}
               required
             />
@@ -57,12 +58,14 @@ const Login = () => {
                        focus:outline-none focus:border-teal-400 focus:ring-1 
                        focus:ring-teal-400 placeholder-slate-400"
               value={password}
+              autoComplete="current-password"
               onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
           <button
             type="submit"
+            
             className="w-full bg-teal-600 text-white p-3 rounded-lg 
                      font-semibold hover:bg-teal-700 transition-colors 
                      duration-300 shadow-sm"

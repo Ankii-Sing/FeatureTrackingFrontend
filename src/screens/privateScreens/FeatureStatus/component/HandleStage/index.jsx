@@ -30,7 +30,7 @@ const StageLinkUploader = ({ stage, featureId, userId, userRole, feature ,links 
   const closeModal = () => setShowModal(false);
   const toggleAccordion = () => setIsExpanded(!isExpanded); // Toggle function
 
-  console.log("Links received:", links);
+  // console.log("Links received:", links);
 
   const getDocumentType = (stage) => {
     const stageMapping = {

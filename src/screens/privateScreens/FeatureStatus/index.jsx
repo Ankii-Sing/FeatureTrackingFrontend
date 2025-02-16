@@ -87,7 +87,8 @@ const FeatureStatus = () => {
       })
       .then((response) => {
         const prData = JSON.parse(JSON.stringify(response.data)); // Ensure it's JSON
-        const formattedPRs = prData.map((pr) => ({
+        
+        const formattedPRs = prData && prData.map((pr) => ({
           pullRequestId: pr.pullrequest_id, // Store PR ID
           link: pr.link,
           prstatus: pr.prStatus, // Store PR link
