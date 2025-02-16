@@ -32,6 +32,8 @@ const FeatureStatus = () => {
     }
 
     const token = sessionStorage.getItem("token");
+
+    // request to get the feature by id
     axios
       .get(`http://localhost:8080/api/public/feature/${featureId}`, {
         headers: { Authorization: `${token}` },
@@ -61,6 +63,8 @@ const FeatureStatus = () => {
     };
     console.log("Payload for adding PR:", payload);
 
+
+    // Request to add PR
     axios
       .post(`http://localhost:8080/api/public/pullrequest/add/${featureId}`, payload, {
         headers: { Authorization: `${token}` },
@@ -180,6 +184,7 @@ const FeatureStatus = () => {
               userRole={userJson.role}
               featureId={featureId}
               userId={userId}
+              feature = {feature}
               links={documentMap.get(stage.key) || []}
             />
           ))}
@@ -256,6 +261,7 @@ const FeatureStatus = () => {
               userRole={userJson.role}
               featureId={featureId}
               userId={userId}
+              feature = {feature}
               links={documentMap.get(stage.key) || []}
             />
           ))}

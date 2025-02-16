@@ -39,7 +39,7 @@ const FeatureTile = ({ feature }) => {
               : "text-orange-600"
           }`}
         >
-          Status: {feature?.status || "Pending"}
+          Stage: {feature?.stage || "Pending"}
         </span>
       </div>
 

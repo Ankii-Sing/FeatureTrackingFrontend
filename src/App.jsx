@@ -1,4 +1,3 @@
-import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Login from './screens/publicScreens/login';
 import Register from './screens/publicScreens/register';

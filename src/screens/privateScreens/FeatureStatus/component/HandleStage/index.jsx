@@ -1,10 +1,23 @@
 import React, { useState } from "react";
 import axios from "axios";
+import updateFeatureApi from "../../../UpdateApi/updateapi";
 
-const StageLinkUploader = ({ stage, featureId, userId, userRole, links = [] }) => {
+
+const StageLinkUploader = ({ stage, featureId, userId, userRole, feature ,links = [] }) => {
   const [showModal, setShowModal] = useState(false);
   const [documentLink, setDocumentLink] = useState("");
   const [isExpanded, setIsExpanded] = useState(false); // Accordion state
+
+  // EPIC_OWNER_GO_AHEAD, PRS_REVIEWED, PRODUCT_GO_AHEAD,
+  
+  const featureStageMapping = {
+    "Technical Design Document": "TECHNICAL_DESIGN",
+    "Dev-Testing Document": "DEV_TESTING",
+    "QA Testing Document": "QA_TESTING_",
+    "Pre- and Post-Deployment Documents": "PRE_POST_DEPLOYMENT",
+    "Sanity Testing/Staging Results": "SANITY_TESTING_STAGING",
+
+  };
 
   const openModal = () => {
     if (!roleCheck()) {
@@ -70,6 +83,10 @@ const StageLinkUploader = ({ stage, featureId, userId, userRole, links = [] }) =
         setDocumentLink("");
       })
       .catch((error) => console.error("Error adding document:", error));
+
+        // calling update feature api. after updating the feature.
+      feature.stage = featureStageMapping[stage];
+      updateFeatureApi(feature, userId);
   };
 
   return (
@@ -79,7 +96,7 @@ const StageLinkUploader = ({ stage, featureId, userId, userRole, links = [] }) =
         <span className="font-semibold text-slate-700">{stage}</span>
         <button
           className="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition-colors"
-          onClick={openModal}
+          onClick={openModal}      // call openmodel to check the allowed roles.
         >
           Add Link
         </button>

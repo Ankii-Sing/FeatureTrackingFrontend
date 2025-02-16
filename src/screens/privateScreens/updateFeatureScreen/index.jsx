@@ -121,12 +121,13 @@ const UpdateFeatureScreen = () => {
               className="w-full p-3 border-2 border-sky-200 rounded-lg focus:outline-none focus:border-teal-400"
               required
             >
+ 
               <option value="">Select Stage</option>
-              <option value="TECHNICAL_DESIGN_DOCUMENT">Technical Design</option>
-              <option value="DEV_TESTING_DOCUMENT">Dev Testing</option>
-              <option value="QA_TESTING_DOCUMENT">QA Testing</option>
-              <option value="PRE_POST_DEPLOYMENT_DOCUMENTS">Pre/Post Deployment</option>
-              <option value="SANITY_TESTING_STAGING_RESULTS">Sanity Testing</option>
+              <option value="TECHNICAL_DESIGN">Technical Design</option>
+              <option value="DEV_TESTING">Dev Testing</option>
+              <option value="QA_TESTING">QA Testing</option>
+              <option value="PRE_POST_DEPLOYMENT">Pre/Post Deployment</option>
+              <option value="SANITY_TESTING_STAGING">Sanity Testing</option>
               <option value="PRODUCT_GO_AHEAD">Product Go-Ahead</option>
               <option value="EPIC_OWNER_GO_AHEAD">Epic Owner Go-Ahead</option>
             </select>
