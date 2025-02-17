@@ -129,6 +129,9 @@ const FeatureStatus = () => {
 
     // callin updateFeatureApi after updating the feature.
     feature.stage = stageMapping[stage];
+    if(stageMapping[stage] === "EPIC_OWNER_GO_AHEAD" && isApproved){
+        feature.status = "COMPLETED";
+    }
     console.log("Feature after updating stage:", feature);
     console.log("User ID:", userId);
     updateFeatureApi(feature, userId).then(() => {
@@ -198,6 +201,7 @@ const FeatureStatus = () => {
               featureId={featureId}
               userId={userId}
               feature = {feature}
+              setRefreshKey = {setRefreshKey}
               links={documentMap.get(stage.key) || []}
             />
           ))}
@@ -275,6 +279,7 @@ const FeatureStatus = () => {
               featureId={featureId}
               userId={userId}
               feature = {feature}
+              setRefreshKey = {setRefreshKey}
               links={documentMap.get(stage.key) || []}
             />
           ))}

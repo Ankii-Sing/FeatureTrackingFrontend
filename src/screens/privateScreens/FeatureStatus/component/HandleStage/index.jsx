@@ -3,7 +3,7 @@ import axios from "axios";
 import updateFeatureApi from "../../../UpdateApi/updateapi";
 
 
-const StageLinkUploader = ({ stage, featureId, userId, userRole, feature ,links = [] }) => {
+const StageLinkUploader = ({ stage, featureId, userId, userRole, feature , setRefreshKey ,links = [] }) => {
   const [showModal, setShowModal] = useState(false);
   const [documentLink, setDocumentLink] = useState("");
   const [isExpanded, setIsExpanded] = useState(false); // Accordion state
@@ -85,8 +85,11 @@ const StageLinkUploader = ({ stage, featureId, userId, userRole, feature ,links 
       .catch((error) => console.error("Error adding document:", error));
 
         // calling update feature api. after updating the feature.
+    
       feature.stage = featureStageMapping[stage];
-      updateFeatureApi(feature, userId);
+      updateFeatureApi(feature, userId).then(() => {    //.then ensures that the feature is updated before the refresh key is set.
+        setRefreshKey((prev) => prev + 1);
+      });
   };
 
   return (

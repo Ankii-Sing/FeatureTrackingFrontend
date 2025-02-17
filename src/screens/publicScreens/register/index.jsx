@@ -57,7 +57,6 @@ const Register = () => {
               className="w-full p-3 border-2 border-sky-200 rounded-lg 
                        focus:outline-none focus:border-teal-400 placeholder-slate-400"
               value={email}
-              autoComplete="username" 
               onChange={(e) => setEmail(e.target.value)}
               required
             />
@@ -71,7 +70,6 @@ const Register = () => {
               className="w-full p-3 border-2 border-sky-200 rounded-lg 
                        focus:outline-none focus:border-teal-400 placeholder-slate-400"
               value={password}
-              autoComplete="current-password"
               onChange={(e) => setPassword(e.target.value)}
               required
             />
@@ -103,6 +101,17 @@ const Register = () => {
           >
             Create Account
           </button>
+
+          {/* Link to Login Page */}
+          <div className="text-center text-slate-600">
+            Already have an account?{" "}
+            <span
+              className="text-teal-600 cursor-pointer hover:underline"
+              onClick={() => navigate("/login")} // Navigate to the login page
+            >
+              Log In
+            </span>
+          </div>
         </form>
       </div>
     </div>
@@ -110,4 +119,5 @@ const Register = () => {
 };
 
 export default Register;
+
 
