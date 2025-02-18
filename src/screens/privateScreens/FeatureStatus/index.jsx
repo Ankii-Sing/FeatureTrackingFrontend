@@ -24,6 +24,25 @@ const FeatureStatus = () => {
   const [pullRequests, setPullRequests] = useState([]);
 
   const allowedRoles = ["ADMIN", "DEVELOPER", "EPIC_OWNER"];
+  const stageOrder = [
+    "TECHNICAL_DESIGN",
+    "DEV_TESTING",
+    "PRS_REVIEWED",
+    "QA_TESTING",
+    "PRE_POST_DEPLOYMENT",
+    "SANITY_TESTING_STAGING",
+    "PRODUCT_GO_AHEAD",
+    "EPIC_OWNER_GO_AHEAD"
+  ];
+  
+  // Function to check if a feature can move to a given stage
+  const canMoveToStage = (currentStage, newStage) => {
+    const currentIndex = stageOrder.indexOf(currentStage);
+    const newIndex = stageOrder.indexOf(newStage);
+    
+    return newIndex > currentIndex;  // ✅ Only allow forward movement
+  };
+  
 
   useEffect(() => {
     isAuthenticated();
@@ -117,7 +136,6 @@ const FeatureStatus = () => {
       alert(`You are not authorized to change ${stage} status.`);
       return;
     }
-    
 
     const token = sessionStorage.getItem("token");
     const isApproved = decision === "Approved";
@@ -128,7 +146,10 @@ const FeatureStatus = () => {
     };
 
     // callin updateFeatureApi after updating the feature.
-    feature.stage = stageMapping[stage];
+    if(canMoveToStage(feature.stage , stageMapping[stage])){
+        feature.stage = stageMapping[stage];
+    }
+    
     if(stageMapping[stage] === "EPIC_OWNER_GO_AHEAD" && isApproved){
         feature.status = "COMPLETED";
     }
@@ -202,7 +223,9 @@ const FeatureStatus = () => {
               userId={userId}
               feature = {feature}
               setRefreshKey = {setRefreshKey}
-              links={documentMap.get(stage.key) || []}
+              canMoveToStage = {canMoveToStage}
+              links={documentMap.get(stage.key) || []
+              }
             />
           ))}
 
@@ -280,6 +303,7 @@ const FeatureStatus = () => {
               userId={userId}
               feature = {feature}
               setRefreshKey = {setRefreshKey}
+              canMoveToStage={canMoveToStage}
               links={documentMap.get(stage.key) || []}
             />
           ))}
