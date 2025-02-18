@@ -63,9 +63,14 @@ class FeatureContainer extends Component {
           const isAdminOrManager =
             user && ["ADMIN", "PRODUCT_MANAGER", "EPIC_OWNER"].includes(user.role);
 
-          const filteredFeatures = isAdminOrManager
+            const filteredFeatures = isAdminOrManager
             ? features
-            : features.filter((feature) => feature.assignedTo?.userId === user?.userId);
+            : features.filter((feature) => {
+                if (user.role === "QA_ENGINEER") {
+                  return feature.qaEngineer?.userId === user?.userId; // Filter by QA Engineer.
+                }
+                return feature.assignedTo?.userId === user?.userId; // filter for Developers.
+              });
 
           const searchedFeatures = filteredFeatures.filter((feature) =>
             feature.title.toLowerCase().includes(searchQuery.toLowerCase())
