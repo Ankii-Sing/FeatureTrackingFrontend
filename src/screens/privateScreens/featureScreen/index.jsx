@@ -129,13 +129,11 @@
 
 
 import React from "react";
-import Navbar from "../../../shared/navBar";
 import FeatureContainerWithNavigation from "./container";
 
 const FeatureScreen = () => {
   return (
     <div>
-      <Navbar />
       <FeatureContainerWithNavigation />
     </div>
   );

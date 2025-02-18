@@ -122,13 +122,11 @@
 
 
 import React from "react";
-import Navbar from "../../../shared/navBar";
 import RegisterContainerWithNavigation from "./container";
 
 const RegisterScreen = () => {
   return (
     <div>
-      <Navbar />
       <RegisterContainerWithNavigation />
     </div>
   );

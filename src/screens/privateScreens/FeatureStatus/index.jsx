@@ -40,7 +40,7 @@ const FeatureStatus = () => {
     const currentIndex = stageOrder.indexOf(currentStage);
     const newIndex = stageOrder.indexOf(newStage);
     
-    return newIndex > currentIndex;  // ✅ Only allow forward movement
+    return newIndex > currentIndex;  
   };
   
 
@@ -260,30 +260,45 @@ const FeatureStatus = () => {
                     PR Link
                   </a>
                   <div className="flex items-center space-x-3">
+                    {/* Approve Button */}
                     <button
-                      className="bg-green-600 text-white px-3 py-1 rounded-md hover:bg-green-700 transition-colors"
-                      onClick={() => updatePrStatus(pr.pullRequestId, true, fetchPullRequests, userJson.role)}
-                    >
-                      Approve
-                    </button>
-                    <button
-                      className="bg-red-600 text-white px-3 py-1 rounded-md hover:bg-red-700 transition-colors"
-                      onClick={() => updatePrStatus(pr.pullRequestId, false, fetchPullRequests, userJson.role)}
-                    >
-                      Decline
-                    </button>
-                    <span
-                      className={`text-sm ${
+                        className={`px-3 py-1 rounded-md transition-colors ${
                         pr.prstatus === true
-                          ? "text-green-600"
-                          : pr.prstatus === false
-                          ? "text-red-600"
-                          : "text-slate-500"
-                      }`}
+                            ? "bg-gray-400 text-white cursor-not-allowed" // ✅ Disabled (Gray) if already approved
+                            : "bg-teal-600 text-white hover:bg-teal-700"
+                        }`}
+                        onClick={() => updatePrStatus(pr.pullRequestId, true, fetchPullRequests, userJson.role)}
+                        disabled={pr.prstatus === true} // ✅ Disable if already approved
                     >
-                      {pr.prstatus === true ? "Approved" : pr.prstatus === false ? "Declined" : "Pending"}
+                        Approve
+                    </button>
+
+                    {/* Decline Button */}
+                    <button
+                        className={`px-3 py-1 rounded-md transition-colors ${
+                        pr.prstatus === false
+                            ? "bg-gray-400 text-white cursor-not-allowed" // ✅ Disabled (Gray) if already declined
+                            : "bg-blue-600 text-white hover:bg-blue-700"
+                        }`}
+                        onClick={() => updatePrStatus(pr.pullRequestId, false, fetchPullRequests, userJson.role)}
+                        disabled={pr.prstatus === false} // ✅ Disable if already declined
+                    >
+                        Decline
+                    </button>
+
+                    {/* Status Text */}
+                    <span
+                        className={`text-sm ${
+                        pr.prstatus === true
+                            ? "text-green-600"
+                            : pr.prstatus === false
+                            ? "text-red-600"
+                            : "text-slate-500"
+                        }`}>
+                        {pr.prstatus === true ? "Approved" : pr.prstatus === false ? "Declined" : "Pending"}
                     </span>
-                  </div>
+                </div>
+
                 </li>
               ))}
             </ul>
@@ -311,23 +326,32 @@ const FeatureStatus = () => {
           {/* Approval Stages */}
           {["Product Go-Ahead", "Epic Owner Go-Ahead"].map((stage, index) => (
             <div key={index} className="flex justify-between items-center border-b border-sky-200 py-4">
-              <span className=" font-semibold text-slate-700">{stage}</span>
-              <span className="text-slate-500">Status: {showApproval(stage, feature)}</span>
-              <div className="flex space-x-3">
-                <button
-                  className="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition-colors"
-                  onClick={() => handleApproval(stage, "Approved")}
-                >
-                  Approve
+            <span className="font-semibold text-slate-700">{stage}</span>
+            <span className="text-slate-500">Status: {showApproval(stage, feature)}</span>
+            <div className="flex space-x-3">
+              {["Approved", "Declined", "Blocked"].includes(showApproval(stage, feature)) ? (
+                <button className="px-4 py-2 bg-gray-400 text-white rounded-lg cursor-not-allowed">
+                  {showApproval(stage, feature)}
                 </button>
-                <button
-                  className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
-                  onClick={() => handleApproval(stage, "Declined")}
-                >
-                  Decline
-                </button>
-              </div>
+              ) : (
+                <>
+                  <button
+                    className="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition-colors"
+                    onClick={() => handleApproval(stage, "Approved")}
+                  >
+                    Approve
+                  </button>
+                  <button
+                    className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+                    onClick={() => handleApproval(stage, "Declined")}
+                  >
+                    Decline
+                  </button>
+                </>
+              )}
             </div>
+          </div>
+          
           ))}
         </div>
 
@@ -340,11 +364,20 @@ const FeatureStatus = () => {
             Go Home
           </button>
           <button
-            className="px-6 py-2 bg-teal-600 text-white rounded-lg shadow-md hover:bg-teal-700 transition-colors"
+            className={`px-6 py-2 rounded-lg shadow-md transition-colors ${
+                !["ADMIN", "EPIC_OWNER", "PRODUCT_MANAGER"].includes(userJson.role) ||
+                ["PRODUCT_GO_AHEAD", "EPIC_OWNER_GO_AHEAD"].includes(feature.stage)
+                ? "bg-gray-400 text-white cursor-not-allowed" 
+                : "bg-teal-600 text-white hover:bg-teal-700" 
+            }`}
             onClick={() => navigate("/UpdateFeatureScreen", { state: { feature, featureId, userId } })}
-          >
+            disabled={
+                !["ADMIN", "EPIC_OWNER", "PRODUCT_MANAGER"].includes(userJson.role) ||
+                ["PRODUCT_GO_AHEAD", "EPIC_OWNER_GO_AHEAD"].includes(feature.stage)
+            } 
+            >
             Update Feature
-          </button>
+            </button>
         </div>
       </div>
 
