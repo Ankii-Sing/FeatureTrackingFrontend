@@ -19,7 +19,6 @@ const RegisterForm = ({
         <form onSubmit={handleRegister} className="space-y-5">
           {errorMessage && <p className="text-red-500 text-center">{errorMessage}</p>}
 
-          {/* Username Field */}
           <div>
             <input
               type="text"
@@ -33,7 +32,6 @@ const RegisterForm = ({
             />
           </div>
 
-          {/* Email Field */}
           <div>
             <input
               type="email"
@@ -47,7 +45,6 @@ const RegisterForm = ({
             />
           </div>
 
-          {/* Password Field */}
           <div>
             <input
               type="password"
@@ -61,7 +58,6 @@ const RegisterForm = ({
             />
           </div>
 
-          {/* User Role Select */}
           <div>
             <select
               name="userRole"
@@ -80,7 +76,6 @@ const RegisterForm = ({
             </select>
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             className="w-full bg-teal-600 text-white p-3 rounded-lg 
@@ -89,7 +84,6 @@ const RegisterForm = ({
             Create Account
           </button>
 
-          {/* Link to Login Page */}
           <div className="text-center text-slate-600">
             Already have an account?{" "}
             <span

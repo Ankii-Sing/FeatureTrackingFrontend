@@ -6,9 +6,8 @@ import updateFeatureApi from "../../../UpdateApi/updateapi";
 const StageLinkUploader = ({ stage, featureId, userId, userRole, feature , setRefreshKey , canMoveToStage ,links = [] }) => {
   const [showModal, setShowModal] = useState(false);
   const [documentLink, setDocumentLink] = useState("");
-  const [isExpanded, setIsExpanded] = useState(false); // Accordion state
+  const [isExpanded, setIsExpanded] = useState(false); 
 
-  // EPIC_OWNER_GO_AHEAD, PRS_REVIEWED, PRODUCT_GO_AHEAD,
   
   const featureStageMapping = {
     "Technical Design Document": "TECHNICAL_DESIGN",
@@ -28,9 +27,8 @@ const StageLinkUploader = ({ stage, featureId, userId, userRole, feature , setRe
   };
 
   const closeModal = () => setShowModal(false);
-  const toggleAccordion = () => setIsExpanded(!isExpanded); // Toggle function
+  const toggleAccordion = () => setIsExpanded(!isExpanded); 
 
-  // console.log("Links received:", links);
 
   const getDocumentType = (stage) => {
     const stageMapping = {
@@ -88,7 +86,7 @@ const StageLinkUploader = ({ stage, featureId, userId, userRole, feature , setRe
       if(canMoveToStage(feature.stage,featureStageMapping[stage])){
         feature.stage = featureStageMapping[stage];
       }
-      updateFeatureApi(feature, userId).then(() => {    //.then ensures that the feature is updated before the refresh key is set.
+      updateFeatureApi(feature, userId).then(() => {    
         setRefreshKey((prev) => prev + 1);
       });
   };
@@ -100,13 +98,12 @@ const StageLinkUploader = ({ stage, featureId, userId, userRole, feature , setRe
         <span className="font-semibold text-slate-700">{stage}</span>
         <button
           className="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition-colors"
-          onClick={openModal}      // call openmodel to check the allowed roles.
+          onClick={openModal}      
         >
           Add Link
         </button>
       </div>
 
-      {/* Accordion (Only if links exist) */}
       {links.length > 0 ? (
         <div>
           <div
@@ -115,7 +112,7 @@ const StageLinkUploader = ({ stage, featureId, userId, userRole, feature , setRe
           >
             <span className="text-slate-600">View Documents</span>
             <span className="text-slate-600 transform transition-transform duration-200">
-              {isExpanded ? "▲" : "▼"} {/* Simple arrow icon */}
+              {isExpanded ? "▲" : "▼"} 
             </span>
           </div>
           {isExpanded && (
@@ -141,7 +138,6 @@ const StageLinkUploader = ({ stage, featureId, userId, userRole, feature , setRe
         <p className="text-slate-500 mt-3">No documents available</p>
       )}
 
-      {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">

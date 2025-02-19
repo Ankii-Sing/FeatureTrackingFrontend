@@ -67,7 +67,6 @@ class AddFeatureContainer extends Component {
   }
 }
 
-// Wrapping with useNavigate
 const AddFeatureWithNavigation = (props) => {
   const navigate = useNavigate();
   return <AddFeatureContainer {...props} navigate={navigate} />;

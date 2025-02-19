@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { isAuthenticated } from "../../../utils/auth";
+import { isAuthenticated } from "../../../shared/utils/auth";
 import StageLinkUploader from "./component/HandleStage";
-import { updatePrStatus } from "./utils/prService";
-import { showApproval } from "./utils/showApproval";
-import { fetchDocumentsByFeatureId } from "./utils/getAllDocList";
+import { updatePrStatus } from "./API/prService";
+import { showApproval } from "./container/showApproval";
+import { fetchDocumentsByFeatureId } from "./API/getAllDocList";
 import UpdateFeatureScreen from "../updateFeatureScreen";
 import updateFeatureApi from "../UpdateApi/updateapi";
-
 
 const FeatureStatus = () => {
   const [feature, setFeature] = useState(null);
@@ -32,17 +31,16 @@ const FeatureStatus = () => {
     "PRE_POST_DEPLOYMENT",
     "SANITY_TESTING_STAGING",
     "PRODUCT_GO_AHEAD",
-    "EPIC_OWNER_GO_AHEAD"
+    "EPIC_OWNER_GO_AHEAD",
   ];
-  
+
   // Function to check if a feature can move to a given stage
   const canMoveToStage = (currentStage, newStage) => {
     const currentIndex = stageOrder.indexOf(currentStage);
     const newIndex = stageOrder.indexOf(newStage);
-    
-    return newIndex > currentIndex;  
+
+    return newIndex > currentIndex;
   };
-  
 
   useEffect(() => {
     isAuthenticated();
@@ -84,12 +82,15 @@ const FeatureStatus = () => {
     };
     console.log("Payload for adding PR:", payload);
 
-
     // Request to add PR
     axios
-      .post(`http://localhost:8080/api/public/pullrequest/add/${featureId}`, payload, {
-        headers: { Authorization: `${token}` },
-      })
+      .post(
+        `http://localhost:8080/api/public/pullrequest/add/${featureId}`,
+        payload,
+        {
+          headers: { Authorization: `${token}` },
+        }
+      )
       .then(() => {
         alert("Pull Request added successfully!");
         setPrModalOpen(false);
@@ -107,13 +108,15 @@ const FeatureStatus = () => {
         headers: { Authorization: `${token}` },
       })
       .then((response) => {
-        const prData = JSON.parse(JSON.stringify(response.data)); // Ensure it's JSON
-        
-        const formattedPRs = prData && prData.map((pr) => ({
-          pullRequestId: pr.pullrequest_id, // Store PR ID
-          link: pr.link,
-          prstatus: pr.prStatus, // Store PR link
-        }));
+        const prData = JSON.parse(JSON.stringify(response.data));
+
+        const formattedPRs =
+          prData &&
+          prData.map((pr) => ({
+            pullRequestId: pr.pullrequest_id,
+            link: pr.link,
+            prstatus: pr.prStatus,
+          }));
         console.log("Fetched PR Data:", prData);
 
         setPullRequests(formattedPRs);
@@ -146,19 +149,19 @@ const FeatureStatus = () => {
     };
 
     // callin updateFeatureApi after updating the feature.
-    if(canMoveToStage(feature.stage , stageMapping[stage])){
-        feature.stage = stageMapping[stage];
+    // debugger;
+    if (canMoveToStage(feature.stage, stageMapping[stage])) {
+      feature.stage = stageMapping[stage];
     }
-    
-    if(stageMapping[stage] === "EPIC_OWNER_GO_AHEAD" && isApproved){
-        feature.status = "COMPLETED";
+
+    if (stageMapping[stage] === "EPIC_OWNER_GO_AHEAD" && isApproved) {
+      feature.status = "COMPLETED";
     }
     console.log("Feature after updating stage:", feature);
     console.log("User ID:", userId);
     updateFeatureApi(feature, userId).then(() => {
-        setRefreshKey((prevKey) => prevKey + 1); // Refresh feature data after update
-      });
-    // setFeature(feature); // this is to update the feature object in the state.
+      setRefreshKey((prevKey) => prevKey + 1); // Refresh feature data after update on feat
+    });
 
     const payload = {
       featureId: featureId,
@@ -186,31 +189,35 @@ const FeatureStatus = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 to-teal-50 p-6">
       <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8">
-        {/* Header */}
         <div className="flex justify-between items-center border-b pb-4 mb-6">
-          <h2 className="text-2xl font-bold text-teal-700">{feature?.title || "No Name"}</h2>
+          <h2 className="text-2xl font-bold text-teal-700">
+            {feature?.title || "No Name"}
+          </h2>
           <span className="text-slate-500 text-sm">
-            Due Date: {feature.dueDate ? new Date(feature.dueDate).toLocaleDateString() : "N/A"}
+            Due Date:{" "}
+            {feature.dueDate
+              ? new Date(feature.dueDate).toLocaleDateString()
+              : "N/A"}
           </span>
         </div>
 
-        {/* Description */}
-        <p className="text-slate-700 mb-6">{feature?.description || "No Description Available"}</p>
+        <p className="text-slate-700 mb-6">
+          {feature?.description || "No Description Available"}
+        </p>
 
-        {/* Posted by & Status */}
         <div className="flex justify-between text-sm text-slate-800 mb-6">
           <span>Posted by — {feature?.createdBy.username || "Unknown"}</span>
-          <span className="font-semibold">Feature Stage: {feature?.stage || "Pending"}</span>
+          <span className="font-semibold">
+            Feature Stage: {feature?.stage || "Pending"}
+          </span>
         </div>
 
-        {/* Developer */}
         <div className="text-slate-900 font-semibold mb-6">
-          Assigned Developer: {feature?.assignedTo.username || "No Developer Assigned"}
+          Assigned Developer:{" "}
+          {feature?.assignedTo.username || "No Developer Assigned"}
         </div>
 
-        {/* Feature Stages */}
         <div className="space-y-6">
-          {/* Stages with "Add Link" */}
           {[
             { name: "Technical Design Document", key: "TECHNICAL_DOC" },
             { name: "Dev-Testing Document", key: "DEV_TESTING_DOC" },
@@ -221,17 +228,17 @@ const FeatureStatus = () => {
               userRole={userJson.role}
               featureId={featureId}
               userId={userId}
-              feature = {feature}
-              setRefreshKey = {setRefreshKey}
-              canMoveToStage = {canMoveToStage}
-              links={documentMap.get(stage.key) || []
-              }
+              feature={feature}
+              setRefreshKey={setRefreshKey}
+              canMoveToStage={canMoveToStage}
+              links={documentMap.get(stage.key) || []}
             />
           ))}
 
-          {/* PR Reviewer Addition */}
           <div className="flex justify-between items-center border-b border-sky-200 py-4">
-            <span className=" font-semibold text-slate-700">Add Pull Request</span>
+            <span className=" font-semibold text-slate-700">
+              Add Pull Request
+            </span>
             <button
               className="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition-colors"
               onClick={() => {
@@ -246,11 +253,13 @@ const FeatureStatus = () => {
             </button>
           </div>
 
-          {/* Display Added PRs */}
           {pullRequests.length > 0 && (
             <ul className="mt-4 space-y-3">
               {pullRequests.map((pr, index) => (
-                <li key={index} className="flex items-center justify-between bg-sky-50 p-3 rounded-lg">
+                <li
+                  key={index}
+                  className="flex items-center justify-between bg-sky-50 p-3 rounded-lg"
+                >
                   <a
                     href={pr.link}
                     target="_blank"
@@ -259,52 +268,67 @@ const FeatureStatus = () => {
                   >
                     PR Link
                   </a>
-                  <div className="flex items-center space-x-3">
-                    {/* Approve Button */}
-                    <button
-                        className={`px-3 py-1 rounded-md transition-colors ${
-                        pr.prstatus === true
-                            ? "bg-gray-400 text-white cursor-not-allowed" // ✅ Disabled (Gray) if already approved
-                            : "bg-teal-600 text-white hover:bg-teal-700"
-                        }`}
-                        onClick={() => updatePrStatus(pr.pullRequestId, true, fetchPullRequests, userJson.role)}
-                        disabled={pr.prstatus === true} // ✅ Disable if already approved
-                    >
-                        Approve
-                    </button>
-
-                    {/* Decline Button */}
-                    <button
-                        className={`px-3 py-1 rounded-md transition-colors ${
-                        pr.prstatus === false
-                            ? "bg-gray-400 text-white cursor-not-allowed" // ✅ Disabled (Gray) if already declined
-                            : "bg-blue-600 text-white hover:bg-blue-700"
-                        }`}
-                        onClick={() => updatePrStatus(pr.pullRequestId, false, fetchPullRequests, userJson.role)}
-                        disabled={pr.prstatus === false} // ✅ Disable if already declined
-                    >
-                        Decline
-                    </button>
-
-                    {/* Status Text */}
+                  <div className="flex items-center justify-center space-x-3">
                     <span
-                        className={`text-sm ${
+                      className={`text-sm ${
                         pr.prstatus === true
-                            ? "text-green-600"
-                            : pr.prstatus === false
-                            ? "text-red-600"
-                            : "text-slate-500"
-                        }`}>
-                        {pr.prstatus === true ? "Approved" : pr.prstatus === false ? "Declined" : "Pending"}
+                          ? "text-green-600"
+                          : pr.prstatus === false
+                          ? "text-red-600"
+                          : "text-slate-500"
+                      }`}
+                    >
+                      Status:{" "}
+                      {pr.prstatus === true
+                        ? "Approved"
+                        : pr.prstatus === false
+                        ? "Declined"
+                        : "Pending"}
                     </span>
-                </div>
 
+                    <button
+                      className={`px-3 py-1 rounded-md transition-colors ${
+                        pr.prstatus === true
+                          ? "bg-gray-400 text-white cursor-not-allowed"
+                          : "bg-teal-600 text-white hover:bg-teal-700"
+                      }`}
+                      onClick={() =>
+                        updatePrStatus(
+                          pr.pullRequestId,
+                          true,
+                          fetchPullRequests,
+                          userJson.role
+                        )
+                      }
+                      disabled={pr.prstatus === true}
+                    >
+                      Approve
+                    </button>
+
+                    <button
+                      className={`px-3 py-1 rounded-md transition-colors ${
+                        pr.prstatus === false
+                          ? "bg-gray-400 text-white cursor-not-allowed"
+                          : "bg-red-600 text-white hover:bg-red-700"
+                      }`}
+                      onClick={() =>
+                        updatePrStatus(
+                          pr.pullRequestId,
+                          false,
+                          fetchPullRequests,
+                          userJson.role
+                        )
+                      }
+                      disabled={pr.prstatus === false}
+                    >
+                      Decline
+                    </button>
+                  </div>
                 </li>
               ))}
             </ul>
           )}
 
-          {/* Additional Stages */}
           {[
             { name: "QA Testing Document", key: "QA_DOC" },
             { name: "Pre- and Post-Deployment Documents", key: "PRE_POST_DOC" },
@@ -316,46 +340,40 @@ const FeatureStatus = () => {
               userRole={userJson.role}
               featureId={featureId}
               userId={userId}
-              feature = {feature}
-              setRefreshKey = {setRefreshKey}
+              feature={feature}
+              setRefreshKey={setRefreshKey}
               canMoveToStage={canMoveToStage}
               links={documentMap.get(stage.key) || []}
             />
           ))}
 
-          {/* Approval Stages */}
           {["Product Go-Ahead", "Epic Owner Go-Ahead"].map((stage, index) => (
-            <div key={index} className="flex justify-between items-center border-b border-sky-200 py-4">
-            <span className="font-semibold text-slate-700">{stage}</span>
-            <span className="text-slate-500">Status: {showApproval(stage, feature)}</span>
-            <div className="flex space-x-3">
-              {["Approved", "Declined", "Blocked"].includes(showApproval(stage, feature)) ? (
-                <button className="px-4 py-2 bg-gray-400 text-white rounded-lg cursor-not-allowed">
-                  {showApproval(stage, feature)}
+            <div
+              key={index}
+              className="flex justify-between items-center border-b border-sky-200 py-4"
+            >
+              <span className="font-semibold text-slate-700">{stage}</span>
+              <span className="text-slate-500">
+                Status: {showApproval(stage, feature)}
+              </span>
+              <div className="flex space-x-3">
+                <button
+                  className="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition-colors"
+                  onClick={() => handleApproval(stage, "Approved")}
+                >
+                  Approve
                 </button>
-              ) : (
-                <>
-                  <button
-                    className="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition-colors"
-                    onClick={() => handleApproval(stage, "Approved")}
-                  >
-                    Approve
-                  </button>
-                  <button
-                    className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
-                    onClick={() => handleApproval(stage, "Declined")}
-                  >
-                    Decline
-                  </button>
-                </>
-              )}
+                <button
+                  className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+                  onClick={() => handleApproval(stage, "Declined")}
+                >
+                  Decline
+                </button>
+              </div>
             </div>
-          </div>
-          
           ))}
         </div>
 
-        {/* Buttons */}
         <div className="mt-8 flex justify-center space-x-4">
           <button
             className="px-6 py-2 bg-slate-700 text-white rounded-lg shadow-md hover:bg-slate-900 transition-colors"
@@ -365,23 +383,34 @@ const FeatureStatus = () => {
           </button>
           <button
             className={`px-6 py-2 rounded-lg shadow-md transition-colors ${
-                !["ADMIN", "EPIC_OWNER", "PRODUCT_MANAGER"].includes(userJson.role) ||
-                ["PRODUCT_GO_AHEAD", "EPIC_OWNER_GO_AHEAD"].includes(feature.stage)
-                ? "bg-gray-400 text-white cursor-not-allowed" 
-                : "bg-teal-600 text-white hover:bg-teal-700" 
+              !["ADMIN", "EPIC_OWNER", "PRODUCT_MANAGER"].includes(
+                userJson.role
+              ) ||
+              ["PRODUCT_GO_AHEAD", "EPIC_OWNER_GO_AHEAD"].includes(
+                feature.stage
+              )
+                ? "bg-gray-400 text-white cursor-not-allowed"
+                : "bg-teal-600 text-white hover:bg-teal-700"
             }`}
-            onClick={() => navigate("/UpdateFeatureScreen", { state: { feature, featureId, userId } })}
+            onClick={() =>
+              navigate("/UpdateFeatureScreen", {
+                state: { feature, featureId, userId },
+              })
+            }
             disabled={
-                !["ADMIN", "EPIC_OWNER", "PRODUCT_MANAGER"].includes(userJson.role) ||
-                ["PRODUCT_GO_AHEAD", "EPIC_OWNER_GO_AHEAD"].includes(feature.stage)
-            } 
-            >
+              !["ADMIN", "EPIC_OWNER", "PRODUCT_MANAGER"].includes(
+                userJson.role
+              ) ||
+              ["PRODUCT_GO_AHEAD", "EPIC_OWNER_GO_AHEAD"].includes(
+                feature.stage
+              )
+            }
+          >
             Update Feature
-            </button>
+          </button>
         </div>
       </div>
 
-      {/* PR Modal */}
       {prModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
@@ -415,4 +444,3 @@ const FeatureStatus = () => {
 };
 
 export default FeatureStatus;
-

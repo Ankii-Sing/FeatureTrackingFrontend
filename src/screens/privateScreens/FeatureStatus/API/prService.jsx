@@ -7,7 +7,7 @@ export const updatePrStatus = (pullRequestId, status, fetchPullRequests, role) =
         return;
     }
 
-    const token = sessionStorage.getItem("token"); // Get auth token
+    const token = sessionStorage.getItem("token"); 
     const payload = {
         pullRequestId: pullRequestId,
         prStatus: status,
