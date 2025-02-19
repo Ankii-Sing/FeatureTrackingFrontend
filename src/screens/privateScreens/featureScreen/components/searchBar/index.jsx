@@ -11,6 +11,7 @@ const SearchBar = ({ onSearch, placeholder = "Search..." }) => {
 
   return (
     <div className="flex items-center border border-sky-200 rounded-lg p-2 bg-white shadow-sm focus-within:border-teal-400 focus-within:ring-1 focus-within:ring-teal-400 transition-all duration-300">
+      {/* Search Input */}
       <input
         type="text"
         className="w-full px-4 py-2 border-none focus:outline-none placeholder-slate-400 text-slate-700"
@@ -32,3 +33,4 @@ const SearchBar = ({ onSearch, placeholder = "Search..." }) => {
 };
 
 export default SearchBar;
+

@@ -1,5 +1,6 @@
 const USER_API_URL = "http://localhost:8080/api/public/users";
 import axios from "axios";
+// import setUsers fro
     
     const fetchUsers = async () => {
         const token = sessionStorage.getItem("token");
@@ -9,7 +10,7 @@ import axios from "axios";
             const response = await axios.get(USER_API_URL, {
                 headers: { Authorization: `${token}` },
             });
-            
+            // setUsers(response.data);
             console.log("Fetched users:", response.data);
             return response.data;
             

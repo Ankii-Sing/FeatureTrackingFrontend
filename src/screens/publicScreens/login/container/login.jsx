@@ -9,7 +9,6 @@ class LoginContainer extends Component {
 
   constructor(props) {
     super(props);
-    // de-structring
     this.state = {
       email: "",
       password: "",
@@ -30,7 +29,7 @@ class LoginContainer extends Component {
       const response = await loginUser({ email, password });
   
       if (response.user) {
-        setUser(response.user); 
+        setUser(response.user); // Update the UserContext with logged-in user
         alert("Login successful!");
         navigate("/Feature");
       } else {
@@ -58,6 +57,7 @@ class LoginContainer extends Component {
   }
 }
 
+// Wrapping with `useNavigate` inside a functional component
 const LoginContainerWithNavigation = (props) => {
   const navigate = useNavigate();
   return <LoginContainer {...props} navigate={navigate} />;

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
-import updateFeatureApi from "../../../UpdateApi/updateapi";
+import updateFeatureApi from "../utils/updateapi";
 
 
-const StageLinkUploader = ({ stage, featureId, userId, userRole, feature , setRefreshKey , canMoveToStage ,links = [] }) => {
+const StageLinkUploader = ({ stage, featureId, userId, userRole, feature , setRefreshKey ,links = [] , }) => {
   const [showModal, setShowModal] = useState(false);
   const [documentLink, setDocumentLink] = useState("");
   const [isExpanded, setIsExpanded] = useState(false); // Accordion state
@@ -85,9 +85,8 @@ const StageLinkUploader = ({ stage, featureId, userId, userRole, feature , setRe
       .catch((error) => console.error("Error adding document:", error));
 
         // calling update feature api. after updating the feature.
-      if(canMoveToStage(feature.stage,featureStageMapping[stage])){
-        feature.stage = featureStageMapping[stage];
-      }
+    
+      feature.stage = featureStageMapping[stage];
       updateFeatureApi(feature, userId).then(() => {    //.then ensures that the feature is updated before the refresh key is set.
         setRefreshKey((prev) => prev + 1);
       });
