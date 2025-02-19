@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import PrivateRoute from "../screens/privateScreens/PrivateRoutes";
 
+
 const Login = lazy(() => import("../screens/publicScreens/login"));
 const Register = lazy(() => import("../screens/publicScreens/register"));
 const Feature = lazy(() => import("../screens/privateScreens/featureScreen"));

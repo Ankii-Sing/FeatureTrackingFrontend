@@ -1,5 +1,23 @@
 import axios from "axios";
 
+export const fetchPullRequests = async (featureId) => {
+    try {
+      const token = sessionStorage.getItem("token");
+      const response = await axios.get(`http://localhost:8080/api/public/pullrequest/${featureId}`, {
+        headers: { Authorization: `${token}` },
+      });
+  
+      return response.data.map((pr) => ({
+        pullRequestId: pr.pullrequest_id,
+        link: pr.link,
+        prstatus: pr.prStatus,
+      }));
+    } catch (error) {
+      console.error("Error fetching PRs:", error);
+      return [];
+    }
+  };
+
 export const updatePrStatus = (pullRequestId, status, fetchPullRequests, role) => {
 
     if(role  && role !== "ADMIN" && role !== "EPIC_OWNER" && role !== "DEVELOPER") {
