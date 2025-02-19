@@ -13,7 +13,7 @@ export const showApproval = (stage, feature) => {
     }
     
     if (stage === "Epic Owner Go-Ahead") {
-        if (feature.prodGoAheadStatus !== true) return "Blocked"; // ✅ Block Epic Owner if Product Go-Ahead is not approved
+        if (feature.prodGoAheadStatus !== true) return "Blocked"; 
         return feature.epicOwnerGoAheadStatus === true
         ? "Approved"
         : feature.epicOwnerGoAheadStatus === false
@@ -23,14 +23,4 @@ export const showApproval = (stage, feature) => {
     
     return "Unknown"; 
     
-
-    // if (feature && stage == "Product Go-Ahead") {
-    //     return feature.prodGoAheadStatus === true ? "Approved" : 
-    //            feature.prodGoAheadStatus === false ? "Declined" : "Pending";
-    // } 
-    // else if (feature && stage == "Epic Owner Go-Ahead") {
-    //     return feature.epicOwnerGoAheadStatus === true ? "Approved" : 
-    //            feature.epicOwnerGoAheadStatus === false ? "Declined" : "Pending";
-    // }
-    // return "Unknown"; // Default case if approval type is invalid
 };

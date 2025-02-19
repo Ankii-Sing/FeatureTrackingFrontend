@@ -17,7 +17,6 @@ export function UserProvider({ children }) {
       console.error("Error parsing user data from sessionStorage:", error);}
     }, []); 
 
-  console.log("User data in JSON:", user);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>

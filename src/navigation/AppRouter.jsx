@@ -1,46 +1,8 @@
-// import { BrowserRouter, Route, Routes } from 'react-router-dom';
-// import Login from '../screens/publicScreens/login';
-// import Register from '../screens/publicScreens/register';
-// import Feature from '../screens/privateScreens/featureScreen';
-// import AddFeature from '../screens/privateScreens/addFeature';
-// import FeatureStatus from '../screens/privateScreens/FeatureStatus';
-// import UpdateFeatureScreen from '../screens/privateScreens/updateFeatureScreen';
-// import PrivateRoute from '../screens/privateScreens/PrivateRoutes';
-
-
-
-
-// function AppRouter() {
-//   return (
-//     <BrowserRouter>
-//       <Routes>
-    
-//         {/* <Route path="/" element={<Welcome />} /> */}
-//         <Route path="/login" element={<Login />} />
-//         <Route path="/register" element={<Register />} />
-
-        
-//         <Route element={<PrivateRoute />}>
-//           <Route path="/feature" element={<Feature />} />
-//           <Route path="/addFeature" element={<AddFeature />} />
-//           <Route path="/featureStatus" element={<FeatureStatus />} />
-//           <Route path="/UpdateFeatureScreen" element={<UpdateFeatureScreen />} />
-//         </Route>
-        
-//       </Routes>
-//     </BrowserRouter>
-//   );
-// }
-
-// export default AppRouter;
-
-
-
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import PrivateRoute from "../screens/privateScreens/PrivateRoutes";
 
-// Lazy-loaded components
+const Welcome = lazy(() => import("../screens/publicScreens/welcomeScreen"));
 const Login = lazy(() => import("../screens/publicScreens/login"));
 const Register = lazy(() => import("../screens/publicScreens/register"));
 const Feature = lazy(() => import("../screens/privateScreens/featureScreen"));
@@ -51,18 +13,24 @@ const UpdateFeatureScreen = lazy(() => import("../screens/privateScreens/updateF
 function AppRouter() {
   return (
     <BrowserRouter>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense
+        fallback={
+          <div className="flex justify-center items-center min-h-screen text-teal-600 font-semibold">
+            Loading...
+          </div>
+        }
+      >
         <Routes>
           {/* Public Routes */}
+          <Route path="/" element={<Welcome />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-          {/* Private Routes (Require Authentication) */}
           <Route element={<PrivateRoute />}>
             <Route path="/feature" element={<Feature />} />
             <Route path="/addFeature" element={<AddFeature />} />
             <Route path="/featureStatus" element={<FeatureStatus />} />
-            <Route path="/UpdateFeatureScreen" element={<UpdateFeatureScreen />} />
+            <Route path="/updateFeatureScreen" element={<UpdateFeatureScreen />} />
           </Route>
         </Routes>
       </Suspense>
@@ -71,4 +39,3 @@ function AppRouter() {
 }
 
 export default AppRouter;
-

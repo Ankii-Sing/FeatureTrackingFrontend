@@ -6,7 +6,6 @@ const FeatureContext = createContext();
 export function FeatureProvider({ children }) {
   const [features, setFeatures] = useState([]);
 
-  console.log("feature list data in from feature provider:", features);
   useEffect(() => {
     const storedFeatures = sessionStorage.getItem("features");
     if (storedFeatures) {

@@ -25,6 +25,6 @@ export const fetchDocumentsByFeatureId = async (featureId) => {
         return documentMap;
     } catch (error) {
         console.error("Error fetching documents:", error);
-        return new Map(); // Return empty map if error occurs
+        return new Map(); 
     }
 };

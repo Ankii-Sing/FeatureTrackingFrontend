@@ -60,7 +60,6 @@ class RegisterContainer extends Component {
   }
 }
 
-// Wrapping with `useNavigate` inside a functional component
 const RegisterContainerWithNavigation = (props) => {
   const navigate = useNavigate();
   return <RegisterContainer {...props} navigate={navigate} />;

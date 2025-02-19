@@ -31,13 +31,23 @@ const UpdateFeatureForm = ({ users, formData, handleChange, handleSubmit }) => {
 
 export default UpdateFeatureForm;
 
-// Helper Components
-const InputField = ({ label, ...props }) => (
-  <div>
-    <label className="block text-sm font-medium text-slate-700 mb-1">{label}</label>
-    <input className="w-full p-3 border-2 border-sky-200 rounded-lg focus:outline-none focus:border-teal-400" {...props} required />
-  </div>
-);
+const InputField = ({ label, type = "text", ...props }) => {
+  const today = new Date().toISOString().split("T")[0]; 
+
+  return (
+    <div>
+      <label className="block text-sm font-medium text-slate-700 mb-1">{label}</label>
+      <input
+        className="w-full p-3 border-2 border-sky-200 rounded-lg focus:outline-none focus:border-teal-400 placeholder-slate-400"
+        type={type}
+        min={type === "date" ? today : undefined} 
+        {...props}
+        required
+      />
+    </div>
+  );
+};
+
 
 const TextareaField = ({ label, ...props }) => (
   <div>

@@ -5,7 +5,7 @@ const LoginForm = ({ email, password, errorMessage, handleChange, handleLogin })
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-sky-50 to-teal-50">
       <div className="p-8 bg-white rounded-2xl shadow-xl w-96 transition-all duration-300 hover:shadow-lg">
         <h2 className="text-3xl font-bold mb-6 text-teal-700 text-center">
-          Welcome to Feature Portal
+          Welcome to FeatureFlow 
         </h2>
         <form onSubmit={handleLogin} className="space-y-6">
           {errorMessage && <p className="text-red-500 text-center">{errorMessage}</p>}

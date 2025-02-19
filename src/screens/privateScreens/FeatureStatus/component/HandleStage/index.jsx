@@ -2,21 +2,26 @@ import React, { useState } from "react";
 import axios from "axios";
 import updateFeatureApi from "../../../UpdateApi/updateapi";
 
-
-const StageLinkUploader = ({ stage, featureId, userId, userRole, feature , setRefreshKey , canMoveToStage ,links = [] }) => {
+const StageLinkUploader = ({
+  stage,
+  featureId,
+  userId,
+  userRole,
+  feature,
+  setRefreshKey,
+  canMoveToStage,
+  links = [],
+}) => {
   const [showModal, setShowModal] = useState(false);
   const [documentLink, setDocumentLink] = useState("");
-  const [isExpanded, setIsExpanded] = useState(false); // Accordion state
+  const [isExpanded, setIsExpanded] = useState(false);
 
-  // EPIC_OWNER_GO_AHEAD, PRS_REVIEWED, PRODUCT_GO_AHEAD,
-  
   const featureStageMapping = {
     "Technical Design Document": "TECHNICAL_DESIGN",
     "Dev-Testing Document": "DEV_TESTING",
     "QA Testing Document": "QA_TESTING",
     "Pre- and Post-Deployment Documents": "PRE_POST_DEPLOYMENT",
     "Sanity Testing/Staging Results": "SANITY_TESTING_STAGING",
-
   };
 
   const openModal = () => {
@@ -28,9 +33,7 @@ const StageLinkUploader = ({ stage, featureId, userId, userRole, feature , setRe
   };
 
   const closeModal = () => setShowModal(false);
-  const toggleAccordion = () => setIsExpanded(!isExpanded); // Toggle function
-
-  // console.log("Links received:", links);
+  const toggleAccordion = () => setIsExpanded(!isExpanded);
 
   const getDocumentType = (stage) => {
     const stageMapping = {
@@ -48,8 +51,17 @@ const StageLinkUploader = ({ stage, featureId, userId, userRole, feature , setRe
       "Technical Design Document": ["ADMIN", "DEVELOPER", "EPIC_OWNER"],
       "Dev-Testing Document": ["ADMIN", "DEVELOPER", "EPIC_OWNER"],
       "QA Testing Document": ["ADMIN", "QA_ENGINEER", "EPIC_OWNER"],
-      "Pre- and Post-Deployment Documents": ["ADMIN", "DEVELOPER", "PRODUCT_MANAGER"],
-      "Sanity Testing/Staging Results": ["ADMIN", "QAE", "EPIC_OWNER", "PRODUCT_MANAGER"],
+      "Pre- and Post-Deployment Documents": [
+        "ADMIN",
+        "DEVELOPER",
+        "PRODUCT_MANAGER",
+      ],
+      "Sanity Testing/Staging Results": [
+        "ADMIN",
+        "QA_ENGINEER",
+        "EPIC_OWNER",
+        "PRODUCT_MANAGER",
+      ],
     };
 
     return allowedRoles[stage]?.includes(userRole);
@@ -84,29 +96,27 @@ const StageLinkUploader = ({ stage, featureId, userId, userRole, feature , setRe
       })
       .catch((error) => console.error("Error adding document:", error));
 
-        // calling update feature api. after updating the feature.
-      if(canMoveToStage(feature.stage,featureStageMapping[stage])){
-        feature.stage = featureStageMapping[stage];
-      }
-      updateFeatureApi(feature, userId).then(() => {    //.then ensures that the feature is updated before the refresh key is set.
-        setRefreshKey((prev) => prev + 1);
-      });
+    if (canMoveToStage(feature.stage, featureStageMapping[stage])) {
+      feature.stage = featureStageMapping[stage];
+    }
+    updateFeatureApi(feature, userId).then(() => {
+      //.then ensures that the feature is updated before the refresh key is set.
+      setRefreshKey((prev) => prev + 1);
+    });
   };
 
   return (
     <div className="border-b border-sky-200 py-4">
-      {/* Header */}
       <div className="flex justify-between items-center">
         <span className="font-semibold text-slate-700">{stage}</span>
         <button
           className="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition-colors"
-          onClick={openModal}      // call openmodel to check the allowed roles.
+          onClick={openModal}
         >
           Add Link
         </button>
       </div>
 
-      {/* Accordion (Only if links exist) */}
       {links.length > 0 ? (
         <div>
           <div
@@ -115,19 +125,22 @@ const StageLinkUploader = ({ stage, featureId, userId, userRole, feature , setRe
           >
             <span className="text-slate-600">View Documents</span>
             <span className="text-slate-600 transform transition-transform duration-200">
-              {isExpanded ? "▲" : "▼"} {/* Simple arrow icon */}
+              {isExpanded ? "▲" : "▼"}
             </span>
           </div>
           {isExpanded && (
             <div className="mt-3 p-4 border border-sky-200 rounded-lg bg-sky-50">
               <ul className="space-y-2">
                 {links.map((link, index) => (
-                  <li key={index} className="text-blue-600 hover:text-blue-800">
+                  <li
+                    key={index}
+                    className="text-blue-600 hover:text-blue-800 break-all"
+                  >
                     <a
                       href={link.documentLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="underline"
+                      className="underline inline-block max-w-full truncate overflow-hidden"
                     >
                       {link.documentLink}
                     </a>
@@ -141,11 +154,12 @@ const StageLinkUploader = ({ stage, featureId, userId, userRole, feature , setRe
         <p className="text-slate-500 mt-3">No documents available</p>
       )}
 
-      {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-lg font-bold text-slate-700 mb-4">Paste Link for {stage}</h2>
+            <h2 className="text-lg font-bold text-slate-700 mb-4">
+              Paste Link for {stage}
+            </h2>
             <input
               type="text"
               className="w-full p-3 border-2 border-sky-200 rounded-lg focus:outline-none focus:border-teal-400 placeholder-slate-400"
@@ -175,5 +189,3 @@ const StageLinkUploader = ({ stage, featureId, userId, userRole, feature , setRe
 };
 
 export default StageLinkUploader;
-
-

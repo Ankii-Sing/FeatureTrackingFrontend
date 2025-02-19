@@ -38,12 +38,58 @@ class UpdateFeatureContainer extends Component {
   };
 
   handleChange = (e) => {
-    this.setState({ formData: { ...this.state.formData, [e.target.name]: e.target.value } });
+    const { name, value } = e.target;
+
+   
+    if (name === "title" && value.length > 255) {
+      alert("Feature Title cannot exceed 255 characters.");
+      return;
+    }
+
+  
+    if (name === "description" && value.length > 512) {
+      alert("Feature Description cannot exceed 512 characters.");
+      return;
+    }
+
+
+    if (name === "dueDate") {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); 
+      const selectedDate = new Date(value);
+
+      if (selectedDate < today) {
+        alert("Due date cannot be in the past. Please select a future date.");
+        return;
+      }
+    }
+
+    this.setState({ formData: { ...this.state.formData, [name]: value } });
   };
 
   handleSubmit = async (e) => {
     e.preventDefault();
     const { formData, featureId, userId } = this.state;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const selectedDate = new Date(formData.dueDate);
+
+    if (selectedDate < today) {
+      alert("Due date cannot be in the past. Please select a future date.");
+      return;
+    }
+
+    if (formData.title.length > 255) {
+      alert("Feature Title cannot exceed 255 characters.");
+      return;
+    }
+
+    if (formData.description.length > 512) {
+      alert("Feature Description cannot exceed 512 characters.");
+      return;
+    }
+
     const success = await updateFeature(featureId, userId, formData);
     if (success) this.props.navigate("/Feature");
   };
@@ -60,7 +106,6 @@ class UpdateFeatureContainer extends Component {
   }
 }
 
-// Wrapping with useNavigate and useLocation
 const UpdateFeatureWithNavigation = (props) => {
   const navigate = useNavigate();
   const location = useLocation();

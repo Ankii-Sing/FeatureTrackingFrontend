@@ -3,27 +3,17 @@ import axios from "axios";
 const API_URL = "http://localhost:8080/api/public";
 
 export const loginUser = async (userData) => {
-  
-  console.log("the user data is :" +  JSON.stringify(userData))
+
   const response = await axios.post(`${API_URL}/authenticate`, userData);
-  sessionStorage.setItem("token", response.data.access_token); // Save token for auth
+  sessionStorage.setItem("token", response.data.access_token); 
   sessionStorage.setItem("user", JSON.stringify(response.data.user)); 
-  
-  console.log("this is the login response" , response);
 
-  // sessionStorage.setItem("userInfo" , response.data.)
-
-  console.log("the data after api response: "+ JSON.stringify(response.data ))
   return response.data;
 };
 
 export const registerUser = async (userData) => {
-  console.log("the user data is :" + JSON.stringify(userData))
   const response =  await axios.post(`${API_URL}/register`, userData);
-  console.log("the data after api response: "+ JSON.stringify(response.data ))
   return response.data;
 };
 
-// export const logoutUser = () => {
-//   localStorage.removeItem("token");
-// };
+
