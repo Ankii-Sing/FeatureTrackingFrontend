@@ -67,7 +67,7 @@ const StageLinkUploader = ({
     return allowedRoles[stage]?.includes(userRole);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!documentLink.trim()) {
       alert("Document link cannot be empty!");
       return;
@@ -99,7 +99,7 @@ const StageLinkUploader = ({
     if (canMoveToStage(feature.stage, featureStageMapping[stage])) {
       feature.stage = featureStageMapping[stage];
     }
-    updateFeatureApi(feature, userId).then(() => {
+    await updateFeatureApi(feature, userId).then(() => {
       //.then ensures that the feature is updated before the refresh key is set.
       setRefreshKey((prev) => prev + 1);
     });

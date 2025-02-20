@@ -45,7 +45,7 @@ class FeatureContainer extends Component {
   handleLogout = (setUser) => {
     setUser(null); 
     localStorage.removeItem("token"); 
-    this.props.navigate("/login"); 
+    this.props.navigate("/"); 
   };
 
   render() {
@@ -82,9 +82,8 @@ class FeatureContainer extends Component {
 
           return (
             <div className="p-6 bg-gradient-to-br from-sky-50 to-teal-50 min-h-screen relative">
-              <div className="max-w-6xl mx-auto">
-                <div className="flex justify-between items-center mb-6">
-                  <div className="text-lg text-teal-700 font-semibold">
+              <div className="flex justify-between items-center mb-6">
+                  <div className="text-3xl text-teal-700 font-semibold">
                     {user ? `Welcome, ${user.username}` : "Not logged in"}
                   </div>
                   <button
@@ -95,8 +94,7 @@ class FeatureContainer extends Component {
                     Logout
                   </button>
                 </div>
-
-               
+              <div className="max-w-6xl mx-auto">
                 <div className="mb-6">
                   <SearchBar onSearch={this.handleSearch} placeholder="Search features..." />
                 </div>
@@ -115,7 +113,7 @@ class FeatureContainer extends Component {
                   )}
                 </div>
 
-                
+               
                 <div className="flex justify-center mt-8">
                   {[...Array(Math.ceil(searchedFeatures.length / itemsPerPage)).keys()].map(
                     (number) => (
@@ -152,7 +150,7 @@ class FeatureContainer extends Component {
   }
 }
 
-// ✅ Wrap FeatureContainer with useNavigate() before exporting
+
 const FeatureContainerWithNavigation = (props) => {
   const navigate = useNavigate();
   return <FeatureContainer {...props} navigate={navigate} />;

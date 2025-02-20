@@ -57,8 +57,14 @@ const FeatureStatus = () => {
       .get(`http://localhost:8080/api/public/feature/${featureId}`, {
         headers: { Authorization: `${token}` },
       })
+      
       .then((response) => setFeature(response.data))
       .catch((error) => console.error("Error fetching feature:", error));
+
+      console.log("This is the feature after GET API" , feature);
+      
+      
+      
 
     fetchDocumentsByFeatureId(featureId)
       .then((map) => {
@@ -134,7 +140,7 @@ const FeatureStatus = () => {
     return allowedRoles[stage]?.includes(userJson.role);
   };
 
-  const handleApproval = (stage, decision) => {
+  const handleApproval = async (stage, decision) => {
     if (!roleCheckForApproval(stage)) {
       alert(`You are not authorized to change ${stage} status.`);
       return;
@@ -157,7 +163,7 @@ const FeatureStatus = () => {
     }
     console.log("Feature after updating stage:", feature);
     console.log("User ID:", userId);
-    updateFeatureApi(feature, userId).then(() => {
+    await updateFeatureApi(feature, userId).then(() => {
       setRefreshKey((prevKey) => prevKey + 1); // Refresh feature data after update
     });
   
